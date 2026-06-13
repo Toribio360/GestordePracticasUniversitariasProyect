@@ -1,4 +1,5 @@
-﻿using GestordePracticasUniversitariasProyect.Models.Entites;
+﻿using GestordePracticasUniversitariasProyect.Models.DTOS.Student;
+using GestordePracticasUniversitariasProyect.Models.Entites;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GestordePracticasUniversitariasProyect.Controllers
@@ -11,32 +12,59 @@ namespace GestordePracticasUniversitariasProyect.Controllers
 
         // GET: api/student
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public ActionResult<IEnumerable<ListStudentDto>> Get()
         {
-            return Students;
+            var students = Students.Select(student => new ListStudentDto
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Lastname = student.Lastname,
+                PhoneNumber = student.PhoneNumber,
+                Address = student.Address,
+                IsActive = student.IsActive
+            }).ToList();
+
+            return Ok(students);
         }
 
         // GET: api/student/1
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public ActionResult<ListStudentDto> GetById(int id)
         {
             var student = Students.FirstOrDefault(x => x.Id == id);
 
             if (student == null)
                 return NotFound($"No se encontró el estudiante con ID {id}");
 
-            return Ok(student);
+            var dto = new ListStudentDto
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Lastname = student.Lastname,
+                PhoneNumber = student.PhoneNumber,
+                Address = student.Address,
+                IsActive = student.IsActive
+            };
+
+            return Ok(dto);
         }
 
         // POST: api/student
         [HttpPost]
-        public IActionResult Post([FromBody] Student student)
+        public IActionResult Post([FromBody] CreateStudentDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (Students.Any(x => x.Id == student.Id))
-                return BadRequest($"Ya existe un estudiante con ID {student.Id}");
+            var student = new Student
+            {
+                Id = Students.Count == 0 ? 1 : Students.Max(x => x.Id) + 1,
+                Name = dto.Name,
+                Lastname = dto.Lastname,
+                PhoneNumber = dto.PhoneNumber,
+                Address = dto.Address,
+                IsActive = true
+            };
 
             Students.Add(student);
 
@@ -49,21 +77,17 @@ namespace GestordePracticasUniversitariasProyect.Controllers
 
         // PUT: api/student/1
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Student studentUpdate)
+        public IActionResult Put(int id, [FromBody] CreateStudentDto dto)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             var student = Students.FirstOrDefault(x => x.Id == id);
 
             if (student == null)
                 return NotFound($"No se encontró el estudiante con ID {id}");
 
-            student.Name = studentUpdate.Name;
-            student.Lastname = studentUpdate.Lastname;
-            student.PhoneNumber = studentUpdate.PhoneNumber;
-            student.Address = studentUpdate.Address;
-            student.IsActive = studentUpdate.IsActive;
+            student.Name = dto.Name;
+            student.Lastname = dto.Lastname;
+            student.PhoneNumber = dto.PhoneNumber;
+            student.Address = dto.Address;
 
             return Ok(student);
         }

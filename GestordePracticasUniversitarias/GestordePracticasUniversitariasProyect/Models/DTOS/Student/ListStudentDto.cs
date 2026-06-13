@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.Design;
+﻿using GestordePracticasUniversitariasProyect.Models.Entites;
+using System.ComponentModel.DataAnnotations;
 
-namespace GestordePracticasUniversitariasProyect.Models.Entites
+namespace GestordePracticasUniversitariasProyect.Models.DTOS.Student
 {
-    public class Student
+    public class ListStudentDto
     {
-
         public int Id { get; set; }
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -18,10 +17,13 @@ namespace GestordePracticasUniversitariasProyect.Models.Entites
         public string? Address { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public  int Companyid { get; set; }
+        public int Companyid { get; set; }
 
         public Company? Company { get; set; }
 
 
+
+
     }
+
 }
