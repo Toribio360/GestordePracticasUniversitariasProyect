@@ -18,7 +18,7 @@ namespace GestordePracticasUniversitariasProyect.Models.Entites
         public string? Address { get; set; }
         public bool IsActive { get; set; } = true;
 
-        public  int Companyid { get; set; }
+        public  int CompanyId { get; set; }
 
         public Company? Company { get; set; }
 
